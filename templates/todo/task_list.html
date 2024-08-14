@@ -1,1 +1,11 @@
-{% extends "base.html" %} {% block content %} {% endblock content %}
+{% extends "base.html" %} 
+{% block content %} 
+<h1>Task List</h1>
+<ul>
+    {% for task in tasks %}
+        <li>
+            {{ task.title }} - {% if task.is_completed %} Completed {% else %} Not Completed {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
