@@ -4,5 +4,5 @@ from .views import *
 app_name = 'todo'
 
 urlpatterns = [
-    path('', ServicesListView.as_view(), name='index'),
+    path('', TaskListView.as_view(), name='task-list'),
 ]
