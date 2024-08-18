@@ -210,3 +210,11 @@ header {
 .btn-logout:hover {
     background-color: #c82333;
 }
+/* Custom Styles for Done Button */
+.btn-done {
+    background-color: #17a2b8; /* A different color for done */
+}
+
+.btn-done:hover {
+    background-color: #138496;
+}

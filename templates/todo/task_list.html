@@ -1,3 +1,4 @@
+<!-- task_list.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -19,6 +20,12 @@
                 </p>
             </div>
             <div class="task-actions">
+                {% if not task.is_completed %}
+                <form action="{% url 'todo:task-done' task.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-done">Done</button>
+                </form>
+                {% endif %}
                 <a href="{% url 'todo:task-update' task.id %}" class="btn btn-edit">Edit</a>
                 <form action="{% url 'todo:task-delete' task.id %}" method="post" class="d-inline">
                     {% csrf_token %}
@@ -28,9 +35,9 @@
         </div>
         {% endfor %}
     </div>
-    <br/>
+
     <div class="text-center mt-4">
-        <a href="{% url 'todo:task-add' %}" class="btn btn-add">Add New Task</a>
+        <a href="{% url 'todo:task-create' %}" class="btn btn-add">Add New Task</a>
     </div>
 </div>
 {% endblock %}
