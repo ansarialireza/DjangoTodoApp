@@ -2,7 +2,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Task
-from .forms import TaskForm
+from .forms import *
+from django.urls import reverse_lazy
 
 
 class TaskListView(LoginRequiredMixin,ListView):
@@ -15,22 +16,15 @@ class TaskListView(LoginRequiredMixin,ListView):
     
 class TaskCreateView(CreateView):
     model = Task
-    form_class = TaskForm
-    fields = ["name"]
-    
-    # def form_valid(self, form):
-    #     comment = form.save(commit=False)
-    #     comment.post = self.object
-    #     comment.save()
-    #     messages.success(self.request, 'ثبت با موفقیت انجام شد')
-    #     return redirect(self.request.path_info)
+    form_class = TaskCreateForm
+    success_url = reverse_lazy('todo:task-list')
 
 
 class TaskUpdateView(UpdateView):
     model = Task
-    form_class = TaskForm
-    fields = ["name"]
-
+    form_class = TaskUpdateForm
+    success_url = reverse_lazy('todo:task-list')
 
 class TaskDeleteView(DeleteView):
     model = Task
+    success_url = reverse_lazy('todo:task-list')

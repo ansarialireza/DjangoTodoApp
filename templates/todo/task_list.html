@@ -1,11 +1,36 @@
-{% extends "base.html" %} 
-{% block content %} 
-<h1>Task List</h1>
-<ul>
-    {% for task in tasks %}
-        <li>
-            {{ task.title }} - {% if task.is_completed %} Completed {% else %} Not Completed {% endif %}
-        </li>
-    {% endfor %}
-</ul>
-{% endblock content %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="page-title">Task List</h1>
+    
+    <div class="task-list">
+        {% for task in tasks %}
+        <div class="task-item">
+            <div class="task-details">
+                <h5 class="task-title">{{ task.title }}</h5>
+                <p class="task-status">
+                    Status: 
+                    {% if task.is_completed %} 
+                        <span class="badge completed">Completed</span>
+                    {% else %} 
+                        <span class="badge not-completed">Not Completed</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="task-actions">
+                <a href="{% url 'todo:task-update' task.id %}" class="btn btn-edit">Edit</a>
+                <form action="{% url 'todo:task-delete' task.id %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-delete">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br/>
+    <div class="text-center mt-4">
+        <a href="{% url 'todo:task-add' %}" class="btn btn-add">Add New Task</a>
+    </div>
+</div>
+{% endblock %}
