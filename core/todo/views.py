@@ -6,20 +6,32 @@ from .models import Task
 from .forms import *
 from django.views import View
 from django.urls import reverse_lazy
+from accounts.models import Profile
 
 
 class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     context_object_name = 'tasks'
     ordering = ['created_at']
+
     
     # def get_queryset(self):
-    #     return Task.objects.filter(user = self.request.user).order_by('created_at')
+    #     profile = Profile.objects.get(user=self.request.user)  # اطمینان از دریافت پروفایل
+    #     return Task.objects.filter(user=profile).order_by('created_at') 
+    
+    def get_queryset(self):
+        profile = Profile.objects.get(user = self.request.user)
+        return Task.objects.filter(user = profile).order_by('created_at')
     
 class TaskCreateView(CreateView):
     model = Task
     form_class = TaskCreateForm
     success_url = reverse_lazy('todo:task-list')
+    
+    def form_valid(self, form):
+        profile = get_object_or_404(Profile,user = self.request.user)
+        form.instance.user = profile
+        return super().form_valid(form)
 
 
 class TaskUpdateView(UpdateView):
