@@ -24,6 +24,11 @@
   <body>
     <li>
       {% if user.is_authenticated %}
+      <a href="{% url 'api:v1:task-list' %}">
+        <button type="submit" class="default-button default-button-3">
+          <span>API</span>
+        </button>
+      </a>
       <form
         id="logout-form"
         action="{% url 'accounts:logout' %}"
