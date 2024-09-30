@@ -1,57 +1,60 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#062e3f" />
-    <meta
-      name="Description"
-      content="A dynamic and aesthetic To-Do List WebApp."
-    />
+    <meta name="Description" content="A dynamic and aesthetic To-Do List WebApp." />
     
-    <base href="{% static '/' %}" />
-
-    <link rel="icon" type="image/png" href="image/favicon.png" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="{% static '/images/favicon.png' %}"
-    />
-    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'CSS/style.css' %}" />
     <title>JUST DO IT</title>
-  </head>
-  <body>
-    <li>
-      {% if user.is_authenticated %}
-      <a href="{% url 'api:v1:task-list' %}">
-        <button type="submit" class="default-button default-button-3">
-          <span>API</span>
-        </button>
-      </a>
-      <form
-        id="logout-form"
-        action="{% url 'accounts:logout' %}"
-        method="post"
-        style="display: inline"
-      >
-        {% csrf_token %}
-        <button type="submit" class="default-button default-button-3">
-          <span>خروج</span>
-        </button>
-      </form>
-      {% else %}
-      <a
-        class="default-button default-button-3"
-        href="{% url 'accounts:login' %}"
-      >
-        <span>ورود</span>
-      </a>
-      {% endif %}
-    </li>
-    {% block content %} 
-    
-    {% endblock content %}
-    <script src="JS/main.js" type="text/javascript"></script>
-  </body>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'api:v1:task-list' %}" class="default-button default-button-3">
+                            <span>API</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'api:schema-swagger-ui' %}" class="default-button default-button-3">
+                            <span>Swagger</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'api:schema-redoc' %}" class="default-button default-button-3">
+                            <span>Redoc</span>
+                        </a>
+                    </li>
+                    <li>
+                        <form id="logout-form" action="{% url 'accounts:logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="default-button default-button-3">
+                                <span>خروج</span>
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="default-button default-button-3" href="{% url 'accounts:login' %}">
+                            <span>ورود</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %} 
+        {% endblock content %}
+    </main>
+
+    <script src="{% static 'JS/main.js' %}" type="text/javascript"></script>
+</body>
 </html>

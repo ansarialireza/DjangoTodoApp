@@ -218,3 +218,61 @@ header {
 .btn-done:hover {
     background-color: #138496;
 }
+
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* رنگ پس‌زمینه */
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #f4f4f4; /* رنگ پس‌زمینه هدر */
+    padding: 1px;
+}
+
+nav ul {
+    list-style: none; /* حذف نقاط لیست */
+    padding: 0;
+    display: flex; /* نمایش افقی */
+    justify-content: space-around; /* فاصله بین عناصر */
+}
+
+nav ul li {
+    margin: 0 10px; /* فاصله بین دکمه‌ها */
+}
+
+.default-button {
+    padding: 6px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff; /* رنگ دکمه */
+    border: none;
+    border-radius: 5px; /* گوشه‌های گرد */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* انیمیشن */
+    text-decoration: none; /* حذف زیرخط */
+    display: inline-block; /* نمایش دکمه به صورت بلوک */
+}
+
+.default-button:hover {
+    background-color: #0056b3; /* رنگ پس‌زمینه در حالت hover */
+    transform: scale(1.05); /* بزرگ‌تر شدن دکمه */
+}
+
+.default-button:focus {
+    outline: none; /* حذف خط برجسته */
+}
+
+.default-button-3 {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* سایه */
+}
+
+main {
+    padding: 10px;
+}
