@@ -14,7 +14,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup Docker-Compose
+
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Start Docker-Compose
       run: docker-compose up -d
+
     - name: Run Tests
       run: docker exec backend sh -c "flake8 && pytest ."
