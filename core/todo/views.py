@@ -14,10 +14,6 @@ class TaskListView(LoginRequiredMixin, ListView):
     context_object_name = "tasks"
     ordering = ["created_at"]
 
-    # def get_queryset(self):
-    #     profile = Profile.objects.get(user=self.request.user)  # اطمینان از دریافت پروفایل
-    #     return Task.objects.filter(user=profile).order_by('created_at')
-
     def get_queryset(self):
         profile = Profile.objects.get(user=self.request.user)
         return Task.objects.filter(user=profile).order_by("created_at")
