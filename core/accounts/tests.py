@@ -5,74 +5,83 @@ from django.contrib.messages import get_messages
 
 User = get_user_model()
 
+
 @pytest.mark.django_db
 def test_user_creation():
-    user = User.objects.create_user(email='test@example.com', password='Testpassword1')
-    assert user.email == 'test@example.com'
-    assert user.check_password('Testpassword1')
+    user = User.objects.create_user(email="test@example.com", password="Testpassword1")
+    assert user.email == "test@example.com"
+    assert user.check_password("Testpassword1")
+
 
 @pytest.mark.django_db
 def test_superuser_creation():
-    superuser = User.objects.create_superuser(email='admin@example.com', password='adminpassword')
+    superuser = User.objects.create_superuser(
+        email="admin@example.com", password="adminpassword"
+    )
     assert superuser.is_superuser
     assert superuser.is_staff
 
+
 @pytest.mark.django_db
 def test_login_success(client):
-    user = User.objects.create_user(email='test@example.com', password='Testpassword1')
-    login_url = reverse('accounts:login')
-    response = client.post(login_url, {
-        'username': 'test@example.com',
-        'password': 'Testpassword1'
-    })
+    login_url = reverse("accounts:login")
+    response = client.post(
+        login_url, {"username": "test@example.com", "password": "Testpassword1"}
+    )
     assert response.status_code == 302  # Redirect on successful login
     messages = list(get_messages(response.wsgi_request))
     assert str(messages[0]) == "شما با موفقیت وارد سایت  شدید."
 
+
 @pytest.mark.django_db
 def test_login_failure(client):
-    User.objects.create_user(email='test@example.com', password='Testpassword1')
-    login_url = reverse('accounts:login')
-    response = client.post(login_url, {
-        'username': 'test@example.com',
-        'password': 'wrongpassword'
-    })
+    User.objects.create_user(email="test@example.com", password="Testpassword1")
+    login_url = reverse("accounts:login")
+    response = client.post(
+        login_url, {"username": "test@example.com", "password": "wrongpassword"}
+    )
     assert response.status_code == 200  # Should render the login page again
     messages = list(get_messages(response.wsgi_request))
     assert len(messages) == 0  # No success message should be present
 
+
 @pytest.mark.django_db
 def test_logout(client):
-    user = User.objects.create_user(email='test@example.com', password='Testpassword1')
-    client.login(email='test@example.com', password='Testpassword1')
-    logout_url = reverse('accounts:logout')
+    client.login(email="test@example.com", password="Testpassword1")
+    logout_url = reverse("accounts:logout")
     response = client.post(logout_url)  # Change to POST request
     assert response.status_code == 302  # Redirect after logout
     messages = list(get_messages(response.wsgi_request))
     assert str(messages[0]) == "شما با موفقیت از سایت خارج شدید."
 
+
 @pytest.mark.django_db
 def test_register_success(client):
-    register_url = reverse('accounts:register')
-    response = client.post(register_url, {
-        'email': 'test@example.com',
-        'password1': 'Strongpassword123',
-        'password2': 'Strongpassword123'
-    })
+    register_url = reverse("accounts:register")
+    response = client.post(
+        register_url,
+        {
+            "email": "test@example.com",
+            "password1": "Strongpassword123",
+            "password2": "Strongpassword123",
+        },
+    )
     assert response.status_code == 302  # Redirect after successful registration
+
 
 @pytest.mark.django_db
 def test_register_failure(client):
-    register_url = reverse('accounts:register')
-    response = client.post(register_url, {
-        'username': 'newuser@example.com',
-        'password1': 'newpassword',
-        'password2': 'differentpassword'
-    })
+    register_url = reverse("accounts:register")
+    response = client.post(
+        register_url,
+        {
+            "username": "newuser@example.com",
+            "password1": "newpassword",
+            "password2": "differentpassword",
+        },
+    )
     assert response.status_code == 200  # Should render the registration page again
-    assert not User.objects.filter(email='newuser@example.com').exists()
-
-
+    assert not User.objects.filter(email="newuser@example.com").exists()
 
 
 # from django.test import TestCase
@@ -151,5 +160,3 @@ def test_register_failure(client):
 #         })
 #         self.assertEqual(response.status_code, 200)  # Should render the registration page again
 #         self.assertFalse(User.objects.filter(email='newuser@example.com').exists())
-
-

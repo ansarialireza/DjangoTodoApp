@@ -3,33 +3,33 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect
 from .models import Task
-from .forms import *
+from .forms import TaskCreateForm, TaskUpdateForm
 from django.views import View
 from django.urls import reverse_lazy
 from accounts.models import Profile
 
 
-class TaskListView(LoginRequiredMixin,ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     model = Task
-    context_object_name = 'tasks'
-    ordering = ['created_at']
+    context_object_name = "tasks"
+    ordering = ["created_at"]
 
-    
     # def get_queryset(self):
     #     profile = Profile.objects.get(user=self.request.user)  # اطمینان از دریافت پروفایل
-    #     return Task.objects.filter(user=profile).order_by('created_at') 
-    
+    #     return Task.objects.filter(user=profile).order_by('created_at')
+
     def get_queryset(self):
-        profile = Profile.objects.get(user = self.request.user)
-        return Task.objects.filter(user = profile).order_by('created_at')
-    
+        profile = Profile.objects.get(user=self.request.user)
+        return Task.objects.filter(user=profile).order_by("created_at")
+
+
 class TaskCreateView(CreateView):
     model = Task
     form_class = TaskCreateForm
-    success_url = reverse_lazy('todo:task-list')
-    
+    success_url = reverse_lazy("todo:task-list")
+
     def form_valid(self, form):
-        profile = get_object_or_404(Profile,user = self.request.user)
+        profile = get_object_or_404(Profile, user=self.request.user)
         form.instance.user = profile
         return super().form_valid(form)
 
@@ -37,15 +37,17 @@ class TaskCreateView(CreateView):
 class TaskUpdateView(UpdateView):
     model = Task
     form_class = TaskUpdateForm
-    success_url = reverse_lazy('todo:task-list')
+    success_url = reverse_lazy("todo:task-list")
+
 
 class TaskDeleteView(DeleteView):
     model = Task
-    success_url = reverse_lazy('todo:task-list')
+    success_url = reverse_lazy("todo:task-list")
+
 
 class TaskDoneView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        task = get_object_or_404(Task, pk=kwargs['pk'])
+        task = get_object_or_404(Task, pk=kwargs["pk"])
         task.is_completed = True
         task.save()
-        return redirect(reverse_lazy('todo:task-list'))
+        return redirect(reverse_lazy("todo:task-list"))

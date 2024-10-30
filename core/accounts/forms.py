@@ -2,23 +2,25 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
-        label="ایمیل", 
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'ایمیل خود را وارد کنید'
-        })
+        label="ایمیل",
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "ایمیل خود را وارد کنید"}
+        ),
     )
 
     class Meta:
         model = User
-        fields = ('email', 'password1', 'password2')
+        fields = ("email", "password1", "password2")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].help_text = 'رمز عبور باید حداقل ۸ کاراکتر باشد.'
-        self.fields['password2'].help_text = 'تکرار گذرواژه باید مشابه گذرواژه اصلی باشد.'
+        self.fields["password1"].help_text = "رمز عبور باید حداقل ۸ کاراکتر باشد."
+        self.fields["password2"].help_text = (
+            "تکرار گذرواژه باید مشابه گذرواژه اصلی باشد."
+        )
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
