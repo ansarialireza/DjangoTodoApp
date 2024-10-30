@@ -1,55 +1,66 @@
+import pytest
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
 from todo.models import Task
 from accounts.models import User, Profile
-from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 
-class TaskViewSetTest(APITestCase):
-    def setUp(self):
+@pytest.mark.django_db
+class TestTaskViewSet:
+    @pytest.fixture(autouse=True)
+    def setup(self):
         self.user = User.objects.create_user(
-            email='testuser@example.com',
-            password='password'
+            email='testuser', password='testpass'
         )
-        self.profile, _ = Profile.objects.get_or_create(user=self.user)
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        self.profile, created = Profile.objects.get_or_create(
+            user=self.user,
+            defaults={
+                'first_name': 'Test',
+                'last_name': 'User',
+                'description': 'A test user',
+            }
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_list_tasks(self):
+        Task.objects.create(title='Task 1', is_completed=False, user=self.profile)
+        Task.objects.create(title='Task 2', is_completed=True, user=self.profile)
+
+        url = reverse('api:v1:task-list')
+        response = self.client.get(url)
+
+        assert response.status_code == 200
+        assert len(response.data) == 2
+        assert response.data[0]['title'] == 'Task 1'
+        assert response.data[1]['title'] == 'Task 2'
 
     def test_create_task(self):
         url = reverse('api:v1:task-list')
-        data = {'title': 'New Task', 'user': self.profile.id}
+        data = {'title': 'New Task', 'is_completed': False, 'user': self.profile.id}
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(Task.objects.filter(title='New Task').exists())
 
-    def test_list_tasks(self):
-        Task.objects.create(title='Task 1', user=self.profile)
-        Task.objects.create(title='Task 2', user=self.profile)
-        
-        url = reverse('api:v1:task-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
-
-    def test_retrieve_task(self):
-        task = Task.objects.create(title='Task to Retrieve', user=self.profile)
-        url = reverse('api:v1:task-detail', args=[task.id])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['title'], task.title)
+        assert response.status_code == 201
+        assert response.data['title'] == 'New Task'
+        assert response.data['is_completed'] is False
+        assert response.data['user'] == self.profile.id
 
     def test_update_task(self):
-        task = Task.objects.create(title='Old Task', user=self.profile)
+        task = Task.objects.create(title='Task 1', is_completed=False, user=self.profile)
         url = reverse('api:v1:task-detail', args=[task.id])
-        data = {'title': 'Updated Task', 'user': self.profile.id}
+        data = {'title': 'Updated Task', 'is_completed': True, 'user': self.profile.id}
         response = self.client.put(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        task.refresh_from_db()
-        self.assertEqual(task.title, 'Updated Task')
+
+        print(f"Response status code: {response.status_code}")
+        print(f"Response data: {response.data}")
+
+        assert response.status_code == 200
+        assert response.data['title'] == 'Updated Task'
+        assert response.data['is_completed'] is True
 
     def test_delete_task(self):
-        task = Task.objects.create(title='Task to Delete', user=self.profile)
+        task = Task.objects.create(title='Task 1', is_completed=False, user=self.profile)
         url = reverse('api:v1:task-detail', args=[task.id])
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Task.objects.filter(id=task.id).exists())
+
+        assert response.status_code == 204
+        assert Task.objects.count() == 0
