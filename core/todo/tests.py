@@ -21,7 +21,7 @@ def test_task_list_view(client):
     assert response.status_code == 200
     assert "todo/task_list.html" in [
         t.name for t in response.templates
-    ]  # تغییر 'template_name' به 'templates'
+    ]
 
 
 @pytest.mark.django_db
