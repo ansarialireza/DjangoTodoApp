@@ -15,8 +15,8 @@ class TaskListView(LoginRequiredMixin, ListView):
     ordering = ["created_at"]
 
     def get_queryset(self):
-        profile = Profile.objects.get(user=self.request.user)
-        return Task.objects.filter(user=profile).order_by("created_at")
+        user=self.request.user
+        return Task.objects.filter(user=user).order_by("created_at")
 
 
 class TaskCreateView(CreateView):
@@ -25,8 +25,7 @@ class TaskCreateView(CreateView):
     success_url = reverse_lazy("todo:task-list")
 
     def form_valid(self, form):
-        profile = get_object_or_404(Profile, user=self.request.user)
-        form.instance.user = profile
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
 
