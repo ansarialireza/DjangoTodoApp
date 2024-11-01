@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
   backend:
     build: .
     container_name: backend
@@ -13,3 +21,13 @@ services:
       - SECRET_KEY=django-insecure-w^@bj@s=-tx_rv-k^us_z3ox6jjtexq$q6hiy*!nhkzpr(wbhh
       - DEBUG=True
       - ALLOWED_HOSTS=*
+    depends_on:
+      - redis
+  worker:
+    build: .
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    depends_on:
+      - redis
+      - backend

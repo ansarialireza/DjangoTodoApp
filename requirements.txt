@@ -26,3 +26,5 @@ PyYAML==6.0.2
 sqlparse==0.5.1
 tzdata==2024.1
 uritemplate==4.1.1
+celery
+redis
