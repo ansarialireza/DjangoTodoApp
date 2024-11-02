@@ -24,4 +24,4 @@ jobs:
       run: docker-compose up -d
 
     - name: Run Tests
-      run: docker exec backend sh -c "black && pytest"
+      run: docker exec backend sh -c "black && pytest" 
