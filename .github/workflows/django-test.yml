@@ -23,5 +23,5 @@ jobs:
     - name: Start Docker-Compose
       run: docker-compose up -d
 
-    # - name: Run Tests
-    #   run: docker exec backend sh -c "flake8"
+    - name: Run Tests
+      run: docker exec backend sh -c "black && pytest"
