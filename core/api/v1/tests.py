@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 class TestTaskViewSet:
     @pytest.fixture(autouse=True)
     def setup(self):
-        self.user = User.objects.create_user(email="testuser", password="testpass")
+        self.user = User.objects.create_user(email="testuser@example.com", password="testpass")
         self.profile, created = Profile.objects.get_or_create(
             user=self.user,
             defaults={
@@ -22,8 +22,8 @@ class TestTaskViewSet:
         self.client.force_authenticate(user=self.user)
 
     def test_list_tasks(self):
-        Task.objects.create(title="Task 1", is_completed=False, user=self.profile)
-        Task.objects.create(title="Task 2", is_completed=True, user=self.profile)
+        Task.objects.create(title="Task 1", is_completed=False, user=self.user)  # Use self.user
+        Task.objects.create(title="Task 2", is_completed=True, user=self.user)    # Use self.user
 
         url = reverse("api:v1:task-list")
         response = self.client.get(url)
@@ -35,24 +35,21 @@ class TestTaskViewSet:
 
     def test_create_task(self):
         url = reverse("api:v1:task-list")
-        data = {"title": "New Task", "is_completed": False, "user": self.profile.id}
+        data = {"title": "New Task", "is_completed": False, "user": self.user.id}  # Use self.user.id
         response = self.client.post(url, data, format="json")
 
         assert response.status_code == 201
         assert response.data["title"] == "New Task"
         assert response.data["is_completed"] is False
-        assert response.data["user"] == self.profile.id
+        assert response.data["user"] == self.user.id
 
     def test_update_task(self):
         task = Task.objects.create(
-            title="Task 1", is_completed=False, user=self.profile
+            title="Task 1", is_completed=False, user=self.user  # Use self.user
         )
         url = reverse("api:v1:task-detail", args=[task.id])
-        data = {"title": "Updated Task", "is_completed": True, "user": self.profile.id}
+        data = {"title": "Updated Task", "is_completed": True, "user": self.user.id}  # Use self.user.id
         response = self.client.put(url, data, format="json")
-
-        print(f"Response status code: {response.status_code}")
-        print(f"Response data: {response.data}")
 
         assert response.status_code == 200
         assert response.data["title"] == "Updated Task"
@@ -60,7 +57,7 @@ class TestTaskViewSet:
 
     def test_delete_task(self):
         task = Task.objects.create(
-            title="Task 1", is_completed=False, user=self.profile
+            title="Task 1", is_completed=False, user=self.user  # Use self.user
         )
         url = reverse("api:v1:task-detail", args=[task.id])
         response = self.client.delete(url)

@@ -3,7 +3,7 @@ from .models import Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("title", "is_completed", "created_at", "updated_at")
+    list_display = ("title","user", "is_completed", "created_at", "updated_at")
     list_filter = ("is_completed", "created_at")
     search_fields = ("title",)
     list_editable = ("is_completed",)
