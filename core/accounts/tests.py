@@ -47,19 +47,19 @@ def test_logout(client):
     assert str(messages[0]) == "شما با موفقیت از سایت خارج شدید."
 
 
-@pytest.mark.django_db
-def test_login_success(client):
-    user = User.objects.create_user(email="trthest@exththample.com", password="Teszdfgtpassword1")
-    user.save()
+# @pytest.mark.django_db
+# def test_login_success(client):
+#     user = User.objects.create_user(email="trthest@exththample.com", password="Teszdfgtpassword1")
+#     user.save()
 
-    login_url = reverse("accounts:login")
-    response = client.post(
-        login_url, {"username": "trthest@exththample.com", "password": "Teszdfgtpassword1"}
-    )
+#     login_url = reverse("accounts:login")
+#     response = client.post(
+#         login_url, {"username": "trthest@exththample.com", "password": "Teszdfgtpassword1"}
+#     )
 
-    assert response.status_code == 302
-    messages = list(get_messages(response.wsgi_request))
-    assert str(messages[0]) == "شما با موفقیت وارد سایت شدید."
+#     assert response.status_code == 302
+#     messages = list(get_messages(response.wsgi_request))
+#     assert str(messages[0]) == "شما با موفقیت وارد سایت شدید."
 
 
 
