@@ -12,7 +12,6 @@ def test_task_list_view(client):
     profile, created = Profile.objects.get_or_create(user=user)
     client.login(email="testuser@example.com", password="password")
 
-    # Assign the user directly to the Task
     Task.objects.create(title="Test Task 1", user=user)
     Task.objects.create(title="Test Task 2", user=user)
 
@@ -32,7 +31,7 @@ def test_task_create_view(client):
         {
             "title": "New Task",
             "description": "Task description",
-            "user": user.id  # Ensure user is assigned correctly
+            "user": user.id
         },
     )
 
@@ -44,7 +43,7 @@ def test_task_update_view(client):
     user = User.objects.create_user(email="testuser@example.com", password="password")
     client.login(email="testuser@example.com", password="password")
 
-    task = Task.objects.create(title="Old Task", user=user)  # Assign user directly
+    task = Task.objects.create(title="Old Task", user=user)
     response = client.post(
         reverse("todo:task-update", kwargs={"pk": task.pk}),
         {
@@ -62,7 +61,7 @@ def test_task_delete_view(client):
     user = User.objects.create_user(email="testuser@example.com", password="password")
     client.login(email="testuser@example.com", password="password")
 
-    task = Task.objects.create(title="Task to Delete", user=user)  # Assign user directly
+    task = Task.objects.create(title="Task to Delete", user=user)
     response = client.post(reverse("todo:task-delete", kwargs={"pk": task.pk}))
 
     assert response.status_code == 302
@@ -73,7 +72,7 @@ def test_task_done_view(client):
     user = User.objects.create_user(email="testuser@example.com", password="password")
     client.login(email="testuser@example.com", password="password")
 
-    task = Task.objects.create(title="Task to Mark as Done", user=user)  # Assign user directly
+    task = Task.objects.create(title="Task to Mark as Done", user=user)
     response = client.post(reverse("todo:task-done", kwargs={"pk": task.pk}))
 
     assert response.status_code == 302

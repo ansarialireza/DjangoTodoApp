@@ -32,17 +32,17 @@ def test_login_failure(client):
     response = client.post(
         login_url, {"username": "test@example.com", "password": "wrongpassword"}
     )
-    assert response.status_code == 200  # Should render the login page again
+    assert response.status_code == 200
     messages = list(get_messages(response.wsgi_request))
-    assert len(messages) == 0  # No success message should be present
+    assert len(messages) == 0
 
 
 @pytest.mark.django_db
 def test_logout(client):
     client.login(email="test@example.com", password="Testpassword1")
     logout_url = reverse("accounts:logout")
-    response = client.post(logout_url)  # Change to POST request
-    assert response.status_code == 302  # Redirect after logout
+    response = client.post(logout_url)
+    assert response.status_code == 302
     messages = list(get_messages(response.wsgi_request))
     assert str(messages[0]) == "شما با موفقیت از سایت خارج شدید."
 
@@ -57,7 +57,7 @@ def test_login_success(client):
         login_url, {"username": "trthest@exththample.com", "password": "Teszdfgtpassword1"}
     )
 
-    assert response.status_code == 302  # Redirect on successful login
+    assert response.status_code == 302
     messages = list(get_messages(response.wsgi_request))
     assert str(messages[0]) == "شما با موفقیت وارد سایت شدید."
 
@@ -74,5 +74,5 @@ def test_register_failure(client):
             "password2": "differentpassword",
         },
     )
-    assert response.status_code == 200  # Should render the registration page again
+    assert response.status_code == 200
     assert not User.objects.filter(email="newuser@example.com").exists()
