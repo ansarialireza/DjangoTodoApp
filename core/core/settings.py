@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework.authtoken",
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -156,7 +157,7 @@ REST_FRAMEWORK = {
 
 
 # CELERY_BROKER_URL = 'redis://redis:6379/1'
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/1'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

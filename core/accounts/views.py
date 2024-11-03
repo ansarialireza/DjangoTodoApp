@@ -1,15 +1,18 @@
 from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth import login
 from django.contrib import messages
 from .forms import CustomUserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import FormView
-from .forms import CustomAuthenticationForm
+# from .forms import CustomAuthenticationForm
 
 
 class LoginView(LoginView):
-    form_class = CustomAuthenticationForm
+    # form_class = CustomAuthenticationForm
     def form_valid(self, form):
-        messages.success(self.request, "شما با موفقیت وارد سایت  شدید.")
+        # کاربر را وارد کنید
+        # login(self.request, form.get_user())
+        messages.success(self.request, "شما با موفقیت وارد سایت شدید.")
         return super().form_valid(form)
 
     def form_invalid(self, form):
