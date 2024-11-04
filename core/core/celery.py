@@ -28,9 +28,9 @@ app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
 #     print(f'Request: {self.request!r}')
 
 
-# app.conf.beat_schedule = {
-#     'delete complete tasks': {
-#         'task': 'todo.tasks.delete_completed_tasks',
-#         'schedule': 600.0,
-#     },
-# }
+app.conf.beat_schedule = {
+    'delete complete tasks': {
+        'task': 'todo.tasks.delete_completed_tasks',
+        'schedule': 600.0,
+    },
+}
