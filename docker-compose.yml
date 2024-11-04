@@ -28,7 +28,16 @@ services:
 
   worker:
     build: .
-    command: celery -A core worker --loglevel=info --uid=www-data 
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    depends_on:
+      - redis
+      - backend
+  
+  beat:
+    build: .
+    command: celery -A core beat --loglevel=info
     volumes:
       - ./core:/app
     depends_on:

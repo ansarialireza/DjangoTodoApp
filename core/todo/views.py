@@ -7,7 +7,8 @@ from .forms import TaskCreateForm, TaskUpdateForm
 from django.views import View
 from django.urls import reverse_lazy
 from accounts.models import Profile
-
+from .tasks import delete_completed_tasks
+from django.contrib import messages
 
 class TaskListView(LoginRequiredMixin, ListView):
     model = Task
@@ -45,4 +46,11 @@ class TaskDoneView(LoginRequiredMixin, View):
         task = get_object_or_404(Task, pk=kwargs["pk"])
         task.is_completed = True
         task.save()
+        return redirect(reverse_lazy("todo:task-list"))
+
+class DeleteCompletedTasksView(View):
+    def get(self,request,*args,**kwargs):
+        result = delete_completed_tasks.delay()
+        messages.success(request,"The task to delete completed tasks has been initiated.")
+        print("The task to delete completed tasks has been initiated.")
         return redirect(reverse_lazy("todo:task-list"))
