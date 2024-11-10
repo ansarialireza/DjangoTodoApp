@@ -15,6 +15,16 @@
     <header>
         <nav>
             <ul>
+                <li>
+                    <a href="{% url 'todo:task-list' %}" class="default-button default-button-3">
+                        <span>خانه</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'weather:index' %}" class="default-button default-button-3">
+                        <span>وضعیت آب و هوا</span>
+                    </a>
+                </li>
                 {% if user.is_authenticated %}
                     <li>
                         <a href="{% url 'api:v1:task-list' %}" class="default-button default-button-3">

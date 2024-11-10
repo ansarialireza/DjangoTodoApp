@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import WeatherApiView
+from .views import WeatherApiView,WeatherView
 
 app_name = "weather"
 
@@ -21,7 +21,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('api/weather',WeatherApiView.as_view(),name = 'get_weather'),
+    path('api/weather/',WeatherApiView.as_view(),name = 'get_weather'),
+    path('',WeatherView.as_view(),name ='index'),
     path(
         "swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
